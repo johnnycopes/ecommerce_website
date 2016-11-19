@@ -106,16 +106,25 @@ def checkout():
     # same problem from above
     if sent_token == customer_token:
         customer_id = customer.customer_id
+        purchased_items = db.query("""
+        SELECT price, product.name
+            FROM product_in_shopping_cart
+            INNER JOIN product ON product.id = product_id
+            INNER JOIN auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
+            WHERE auth_token.token = '48cc7c65-e169-41fa-bada-885cb8c7cab3'""").dictresult()
         total_price = db.query("""
         SELECT sum(price)
             FROM product_in_shopping_cart
             INNER JOIN product ON product.id = product_id
             INNER JOIN auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
             WHERE auth_token.token = '48cc7c65-e169-41fa-bada-885cb8c7cab3'""").namedresult()[0].sum
-        return jsonify(db.insert('purchase', {
-            'customer_id': customer_id,
-            'total_price': total_price
-        }))
+        print purchased_items
+        print total_price
+        return 'hello'
+        # return jsonify(db.insert('purchase', {
+        #     'customer_id': customer_id,
+        #     'total_price': total_price
+        # }))
     else:
         return "Forbidden", 403
 
