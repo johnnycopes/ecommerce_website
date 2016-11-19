@@ -1,18 +1,22 @@
 from flask import Flask, jsonify, request, redirect
 import bcrypt, uuid, pg, os
 
+
 db = pg.DB(dbname='ecommerce_db')
 app = Flask('ecommerceApp')
+
 
 @app.route('/api/products')
 def products():
     results = db.query('SELECT * FROM product').dictresult()
     return jsonify(results)
 
+
 @app.route('/api/products/<prod_id>')
 def products_prod_id(prod_id):
     results = db.query('SELECT * FROM product WHERE product.id = $1', prod_id).dictresult()
     return jsonify(results)
+
 
 @app.route('/api/user/signup', methods=['POST'])
 def signup():
@@ -29,14 +33,15 @@ def signup():
         'password': encrypted_password
     }))
 
+
 @app.route('/api/user/login', methods=['POST'])
 def login():
     data = request.get_json()
     username = data['username']
     password = data['password'] # the entered password
-    results = db.query('SELECT * FROM customer WHERE customer.username = $1', username).namedresult()[0]
-    encrypted_password = results.password
-    customer_id = results.id
+    customer = db.query('SELECT * FROM customer WHERE customer.username = $1', username).namedresult()[0]
+    encrypted_password = customer.password
+    customer_id = customer.id
     # the following line will take the original salt that was used
     # in the generation of the encrypted password, which is stored as
     # part of the encrypted_password, and hash it with the entered password
@@ -45,14 +50,40 @@ def login():
     if rehash == encrypted_password:
         token = uuid.uuid4()
         db.insert('auth_token', {
-        'token': token,
-        'customer_id': customer_id
+            'token': token,
+            'customer_id': customer_id
         })
-        user_data = db.query('SELECT customer.username as "user", auth_token.token as "token" FROM customer, auth_token WHERE customer.username = $1 AND auth_token.customer_id = $2', (username, customer_id)).dictresult()
+        user_data = db.query('SELECT customer.username AS "user", auth_token.token as "token" FROM customer, auth_token WHERE customer.username = $1 AND auth_token.customer_id = $2', (username, customer_id)).dictresult()
         return jsonify(user_data)
     else:
         return "Incorrect password", 401
-    return rehash
+
+
+@app.route('/api/shopping_cart', methods=['POST'])
+def add_product_to_cart():
+    data = request.get_json()
+    sent_token = data.get('token')
+    product_id = data.get('product_id')
+    # CURRENT PROBLEM: if customer turns out to be undefined (tokens don't match), the request throws a 500 error. alternatives?
+    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()[0]
+    customer_id = customer.customer_id
+    customer_token = customer.token
+    if customer_token:
+        db.insert('product_in_shopping_cart', {
+            'product_id' : product_id,
+            'customer_id' : customer_id
+        })
+        return jsonify(customer)
+    else:
+        return "Forbidden", 403
+
+
+@app.route('/api/shopping_cart')
+def view_cart():
+    token = request.args.get('token')
+    results = db.query('SELECT product.name FROM product_in_shopping_cart INNER JOIN product ON product.id = product_id INNER JOIN auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id WHERE auth_token.token = $1', token).namedresult()
+    return jsonify(results)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
