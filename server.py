@@ -67,26 +67,27 @@ def add_product_to_cart():
     data = request.get_json()
     sent_token = data.get('token')
     product_id = data.get('product_id')
-    # CURRENT PROBLEM: if customer turns out to be undefined (tokens don't match), the request throws a 500 error. alternatives?
-    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()[0]
-    customer_id = customer.customer_id
-    customer_token = customer.token
-    if customer_token:
+    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()
+    if customer == []:
+        return "Forbidden", 403
+    else:
+        customer_id = customer[0].customer_id
+        customer_token = customer[0].token
         db.insert('product_in_shopping_cart', {
             'product_id' : product_id,
             'customer_id' : customer_id
         })
         return jsonify(customer)
-    else:
-        return "Forbidden", 403
 
 
 @app.route('/api/shopping_cart')
 def view_cart():
     sent_token = request.args.get('token')
-    customer_token = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()[0].token
-    # same problem from above
-    if sent_token == customer_token:
+    # customer_token = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()[0].token
+    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()
+    if customer == []:
+        return "Forbidden", 403
+    else:
         results = db.query('''
         SELECT product.name
             FROM product_in_shopping_cart
@@ -94,18 +95,18 @@ def view_cart():
             INNER JOIN auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
             WHERE auth_token.token = $1''', sent_token).namedresult()
         return jsonify(results)
-    else:
-        return "Forbidden", 403
+
 
 @app.route('/api/shopping_cart/checkout', methods=['POST'])
 def checkout():
     data = request.get_json()
     sent_token = data.get('token')
-    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()[0]
-    customer_token = customer.token
-    # same problem from above
-    if sent_token == customer_token:
-        customer_id = customer.customer_id
+    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()
+    if customer == []:
+        return "Forbidden", 403
+    else:
+        customer_id = customer[0].customer_id
+        customer_token = customer[0].token
         purchased_items = db.query("""
         SELECT price, product.name
             FROM product_in_shopping_cart
@@ -118,15 +119,10 @@ def checkout():
             INNER JOIN product ON product.id = product_id
             INNER JOIN auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
             WHERE auth_token.token = '48cc7c65-e169-41fa-bada-885cb8c7cab3'""").namedresult()[0].sum
-        print purchased_items
-        print total_price
-        return 'hello'
-        # return jsonify(db.insert('purchase', {
-        #     'customer_id': customer_id,
-        #     'total_price': total_price
-        # }))
-    else:
-        return "Forbidden", 403
+        return jsonify(db.insert('purchase', {
+            'customer_id': customer_id,
+            'total_price': total_price
+        }))
 
 
 if __name__ == '__main__':
