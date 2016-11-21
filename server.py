@@ -67,7 +67,7 @@ def add_product_to_cart():
     data = request.get_json()
     sent_token = data.get('token')
     product_id = data.get('product_id')
-    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()
+    customer = db.query('SELECT * FROM auth_token WHERE token = $1 AND now() < token_expires', sent_token).namedresult()
     if customer == []:
         return "Forbidden", 403
     else:
@@ -84,7 +84,7 @@ def add_product_to_cart():
 def view_cart():
     sent_token = request.args.get('token')
     # customer_token = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()[0].token
-    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()
+    customer = db.query('SELECT * FROM auth_token WHERE token = $1 AND now() < token_expires', sent_token).namedresult()
     if customer == []:
         return "Forbidden", 403
     else:
@@ -101,28 +101,35 @@ def view_cart():
 def checkout():
     data = request.get_json()
     sent_token = data.get('token')
-    customer = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()
+    customer = db.query('SELECT * FROM auth_token WHERE token = $1 AND now() < token_expires', sent_token).namedresult()
     if customer == []:
         return "Forbidden", 403
     else:
         customer_id = customer[0].customer_id
         customer_token = customer[0].token
-        purchased_items = db.query("""
-        SELECT price, product.name
-            FROM product_in_shopping_cart
-            INNER JOIN product ON product.id = product_id
-            INNER JOIN auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
-            WHERE auth_token.token = '48cc7c65-e169-41fa-bada-885cb8c7cab3'""").dictresult()
         total_price = db.query("""
         SELECT sum(price)
             FROM product_in_shopping_cart
             INNER JOIN product ON product.id = product_id
             INNER JOIN auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
-            WHERE auth_token.token = '48cc7c65-e169-41fa-bada-885cb8c7cab3'""").namedresult()[0].sum
-        return jsonify(db.insert('purchase', {
+            WHERE auth_token.token = $1""", customer_token).namedresult()[0].sum
+        purchased_items = db.query("""
+        SELECT price, product.name, product.id
+            FROM product_in_shopping_cart
+            INNER JOIN product ON product.id = product_id
+            INNER JOIN auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
+            WHERE auth_token.token = $1""", customer_token).dictresult()
+        purchase = db.insert('purchase', {
             'customer_id': customer_id,
             'total_price': total_price
-        }))
+        })
+        for item in purchased_items:
+            db.insert('product_in_purchase', {
+                'product_id': item['id'],
+                'purchase_id': purchase['id']
+            })
+        db.query('DELETE FROM product_in_shopping_cart WHERE customer_id = $1', customer_id)
+        return jsonify(purchase)
 
 
 if __name__ == '__main__':
