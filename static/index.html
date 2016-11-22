@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Jamón Kingdom</title>
+        <script src="js/angular.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.js"></script>
+        <script src="js/angular-ui-router.js"></script>
+        <script src="js/main.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body ng-app="store">
+        <div class="container-fluid">
+            <nav>
+                <p>Welcome, {{user_name}}.</p>
+            </nav>
+            <h1>Welcome to Jamón Kingdom!</h1>
+            <ui-view></ui-view>
+        </div>
+    </body>
+</html>

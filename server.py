@@ -3,19 +3,24 @@ import bcrypt, uuid, pg, os
 
 
 db = pg.DB(dbname='ecommerce_db')
-app = Flask('ecommerceApp')
+app = Flask('ecommerce', static_url_path="")
+
+
+@app.route('/')
+def home():
+    return app.send_static_file('index.html')
 
 
 @app.route('/api/products')
 def products():
-    results = db.query('SELECT * FROM product').dictresult()
-    return jsonify(results)
+    product_list = db.query('SELECT * FROM product').dictresult()
+    return jsonify(product_list)
 
 
 @app.route('/api/products/<prod_id>')
-def products_prod_id(prod_id):
-    results = db.query('SELECT * FROM product WHERE product.id = $1', prod_id).dictresult()
-    return jsonify(results)
+def products_details(prod_id):
+    product_details = db.query('SELECT * FROM product WHERE product.id = $1', prod_id).dictresult()
+    return jsonify(product_details)
 
 
 @app.route('/api/user/signup', methods=['POST'])
@@ -23,7 +28,7 @@ def signup():
     data = request.get_json()
     password = data['password'] # the entered password
     salt = bcrypt.gensalt() # generate a salt
-    # now generate the encrypted password
+    # generate the encrypted password
     encrypted_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return jsonify(db.insert('customer', {
         'username': data['username'],
@@ -36,28 +41,30 @@ def signup():
 
 @app.route('/api/user/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    username = data['username']
-    password = data['password'] # the entered password
-    customer = db.query('SELECT * FROM customer WHERE customer.username = $1', username).namedresult()[0]
-    encrypted_password = customer.password
-    customer_id = customer.id
+    user = request.get_json()
+    username = user['username']
+    password = user['password']
+    salt = bcrypt.gensalt() # generate a salt
+    encrypted_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     # the following line will take the original salt that was used
     # in the generation of the encrypted password, which is stored as
     # part of the encrypted_password, and hash it with the entered password
-    # (compare lines 25 and 43)
     rehash = bcrypt.hashpw(password.encode('utf-8'), encrypted_password)
+    print encrypted_password, rehash
     if rehash == encrypted_password:
         token = uuid.uuid4()
-        db.insert('auth_token', {
+        user = db.query('SELECT id, first_name FROM customer WHERE username = $1', username).namedresult()[0]
+        db.insert (
+            "auth_token",
+            token = token,
+            customer_id = user.id
+        )
+        login_data = {
             'token': token,
-            'customer_id': customer_id
-        })
-        user_data = db.query('''
-        SELECT customer.username AS "user", auth_token.token as "token"
-            FROM customer, auth_token
-            WHERE customer.username = $1 AND auth_token.customer_id = $2''', (username, customer_id)).dictresult()
-        return jsonify(user_data)
+            'customer_id': user.id,
+            'user_name' : user.first_name
+        }
+        return jsonify(login_data)
     else:
         return "Incorrect password", 401
 
@@ -83,7 +90,6 @@ def add_product_to_cart():
 @app.route('/api/shopping_cart')
 def view_cart():
     sent_token = request.args.get('token')
-    # customer_token = db.query('SELECT * FROM auth_token WHERE token = $1', sent_token).namedresult()[0].token
     customer = db.query('SELECT * FROM auth_token WHERE token = $1 AND now() < token_expires', sent_token).namedresult()
     if customer == []:
         return "Forbidden", 403

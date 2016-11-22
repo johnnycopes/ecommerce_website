@@ -1,0 +1,31 @@
+<div class="container">
+    <p>hello again</p>
+    <form ng-submit="signupSubmit()" method="post">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input id="username" class="form-control" ng-model="username" type="text" name="username">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input id="email" class="form-control" ng-model="email" type="text" name="email">
+        </div>
+        <div class="form-group">
+            <label for="first-name">First name:</label>
+            <input id="first-name" class="form-control" ng-model="firstName" type="text" name="first-name">
+        </div>
+        <div class="form-group">
+            <label for="last-name">Last name:</label>
+            <input id="last-name" class="form-control" ng-model="lastName" type="text" name="last-name">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input id="password" class="form-control" ng-model="password" type="password" name="password">
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirm password:</label>
+            <input id="confirm-password" class="form-control" ng-model="confirmPassword" type="password" name="">
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+    <div ng-show="passwordsdontmatch">Passwords don't match</div>
+</div>
