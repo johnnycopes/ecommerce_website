@@ -32,9 +32,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 app.factory('StoreService', function($http, $cookies, $rootScope) {
   var service = {};
-  // var cookie = $cookies.getObject('data');
-  // $rootScope.username = cookie.username;
-  // console.log($cookies);
+  var cookie = $cookies.getObject('data');
+  $rootScope.username = cookie.username;
+  console.log(cookie);
   service.getProducts = function() {
     var url = "/api/products";
     return $http({

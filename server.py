@@ -17,7 +17,7 @@ def products():
     return jsonify(product_list)
 
 
-@app.route('/api/products/<prod_id>')
+@app.route('/api/product/<prod_id>')
 def products_details(prod_id):
     product_details = db.query('SELECT * FROM product WHERE product.id = $1', prod_id).dictresult()
     return jsonify(product_details)
@@ -50,7 +50,6 @@ def login():
     # in the generation of the encrypted password, which is stored as
     # part of the encrypted_password, and hash it with the entered password
     rehash = bcrypt.hashpw(password.encode('utf-8'), encrypted_password)
-    print encrypted_password, rehash
     if rehash == encrypted_password:
         token = uuid.uuid4()
         user = db.query('SELECT id, first_name FROM customer WHERE username = $1', username).namedresult()[0]
@@ -62,7 +61,7 @@ def login():
         login_data = {
             'token': token,
             'customer_id': user.id,
-            'user_name' : user.first_name
+            'username' : user.first_name
         }
         return jsonify(login_data)
     else:
