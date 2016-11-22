@@ -103,6 +103,7 @@ app.controller("DetailsController", function($scope, StoreService, $stateParams,
     $scope.name = item.name;
     $scope.description = item.description;
     $scope.image = item.image_path;
+    $scope.price = item.price;
   });
 });
 
