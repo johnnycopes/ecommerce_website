@@ -14,8 +14,9 @@
     <body ng-app="store">
         <div class="container-fluid">
             <nav>
-                <p>Welcome, {{username}}.</p>
+                <p>Welcome, {{displayName}}.</p>
                 <a ui-sref="login">Log In</a>
+                <button ng-click="logout()">Log Out</button>
             </nav>
             <h1>Welcome to Jamón Kingdom!</h1>
             <ui-view></ui-view>

@@ -32,9 +32,24 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 app.factory('StoreService', function($http, $cookies, $rootScope) {
   var service = {};
-  var cookie = $cookies.getObject('data');
-  $rootScope.username = cookie.username;
-  console.log(cookie);
+  // set cookie data to username or guest
+  if (!$cookies.getObject('cookie_data')) {
+    $rootScope.displayName = 'Guest';
+    $rootScope.loggedIn = false;
+  }
+  else {
+    var cookie = $cookies.getObject('cookie_data');
+    $rootScope.displayName = cookie.username;
+    $rootScope.auth_token = cookie.token;
+    $rootScope.loggedIn = true;
+  }
+  // logout
+  $rootScope.logout = function() {
+    $cookies.remove('cookie_data');
+    $rootScope.displayName = 'Guest';
+    $rootScope.auth_token = null;
+    $state.go('home');
+  };
   service.getProducts = function() {
     var url = "/api/products";
     return $http({
@@ -63,7 +78,11 @@ app.factory('StoreService', function($http, $cookies, $rootScope) {
       method: 'POST',
       url: url,
       data: formData
-    });
+    }).success(function(login_data) {
+      $cookies.putObject('cookie_data', login_data);
+      $rootScope.displayName = login_data.username;
+      $rootScope.auth_token = login_data.token;
+    });;
   };
 
   return service;
@@ -116,9 +135,9 @@ app.controller("LoginController", function($scope, StoreService, $stateParams, $
     };
     StoreService.login(formData).error(function(){
       $scope.wronglogin = true;
-    });
-    StoreService.login(formData).success(function(data) {
-      $cookies.putObject('data', data);
+    })
+    .success(function(login_data) {
+      $cookies.putObject('cookie_data', login_data);
       $state.go('home');
     });
   };

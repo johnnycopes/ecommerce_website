@@ -3,7 +3,7 @@
     <ul>
         <li ui-sref="product_details({product_id: item.id})" ng-repeat="item in results">
             <h3>{{item.name}}</h3>
-            <img ng-src="{{item.image_path}}" />
+            <img ng-src="/img/products/{{item.image_path}}" />
         </li>
     </ul>
 </div>
