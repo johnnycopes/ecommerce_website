@@ -10,6 +10,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
       controller: 'MainController'
     })
     .state({
+      name: 'login',
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller: 'LoginController'
+    })
+    .state({
       name: 'product_details',
       url: '/product/{product_id}',
       templateUrl: 'templates/product_details.html',
@@ -22,11 +28,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
       controller: 'SignupController'
     })
     .state({
-      name: 'login',
-      url: '/login',
-      templateUrl: 'templates/login.html',
-      controller: 'LoginController'
+      name: 'view_cart',
+      url: '/view_cart',
+      templateUrl: 'templates/view_cart.html',
+      controller: 'CartController'
     });
+
   $urlRouterProvider.otherwise('/');
 });
 
@@ -40,21 +47,22 @@ app.factory('StoreService', function($http, $cookies, $rootScope) {
   else {
     var cookie = $cookies.getObject('cookie_data');
     $rootScope.displayName = cookie.username;
-    $rootScope.auth_token = cookie.token;
+    $rootScope.token = cookie.token;
     $rootScope.loggedIn = true;
   }
   // logout
   $rootScope.logout = function() {
     $cookies.remove('cookie_data');
     $rootScope.displayName = 'Guest';
-    $rootScope.auth_token = null;
+    $rootScope.token = null;
     $state.go('home');
   };
-  service.getProducts = function() {
-    var url = "/api/products";
+  service.addToCart = function(addToCartData) {
+    var url = '/api/shopping_cart';
     return $http({
-      method: "GET",
-      url: url
+      method: 'POST',
+      url: url,
+      data: addToCartData
     });
   };
   service.getDetails = function(id) {
@@ -64,12 +72,11 @@ app.factory('StoreService', function($http, $cookies, $rootScope) {
       url: url
     });
   };
-  service.signup = function(formData) {
-    var url = '/api/user/signup';
+  service.getProducts = function() {
+    var url = "/api/products";
     return $http({
-      method: 'POST',
-      url: url,
-      data: formData
+      method: "GET",
+      url: url
     });
   };
   service.login = function(formData) {
@@ -81,23 +88,39 @@ app.factory('StoreService', function($http, $cookies, $rootScope) {
     }).success(function(login_data) {
       $cookies.putObject('cookie_data', login_data);
       $rootScope.displayName = login_data.username;
-      $rootScope.auth_token = login_data.token;
+      $rootScope.token = login_data.token;
     });;
+  };
+  service.signup = function(formData) {
+    var url = '/api/user/signup';
+    return $http({
+      method: 'POST',
+      url: url,
+      data: formData
+    });
+  };
+  service.viewCart = function() {
+    var url = '/api/shopping_cart';
+    return $http({
+      method: 'GET',
+      url: url,
+      params: {
+        token: $rootScope.token
+      }
+    });
   };
 
   return service;
 });
 
-app.controller("MainController", function($scope, StoreService, $stateParams, $state) {
-  StoreService.getProducts().success(function(results) {
-    $scope.results = results;
-    $scope.getItemId = function(item) {
-      $scope.id = item.id;
-    };
+app.controller("CartController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {
+  StoreService.viewCart().success(function(resultsArr) {
+    $scope.cart = resultsArr.product_query;
+    $scope.total = resultsArr.total_price;
   });
 });
 
-app.controller("DetailsController", function($scope, StoreService, $stateParams, $state) {
+app.controller("DetailsController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {
   $scope.id = $stateParams.product_id;
   StoreService.getDetails($scope.id).success(function(item) {
     $scope.name = item.name;
@@ -105,25 +128,18 @@ app.controller("DetailsController", function($scope, StoreService, $stateParams,
     $scope.image = item.image_path;
     $scope.price = item.price;
   });
-});
-
-app.controller('SignupController', function($scope, StoreService, $stateParams, $state) {
-  $scope.signupSubmit = function() {
-    if ($scope.password != $scope.confirmPassword) {
-      $scope.passwordsdontmatch = true;
+  $scope.addToCart = function() {
+    if (!$rootScope.loggedIn) {
+      $scope.rejected = true;
+      $cookies.putObject('location', {product_id: $scope.id});
     }
     else {
-      $scope.passwordsdontmatch = false;
-      var formData = {
-        username: $scope.username,
-        email: $scope.email,
-        password: $scope.password,
-        first_name: $scope.firstName,
-        last_name: $scope.lastName
+      var addToCartData = {
+        token: $rootScope.token,
+        product_id: $scope.id
       };
-      StoreService.signup(formData).success(function() {
-        $state.go('login');
-      });
+      StoreService.addToCart(addToCartData);
+      $state.go('view_cart');
     }
   };
 });
@@ -141,5 +157,35 @@ app.controller("LoginController", function($scope, StoreService, $stateParams, $
       $cookies.putObject('cookie_data', login_data);
       $state.go('home');
     });
+  };
+});
+
+app.controller("MainController", function($scope, StoreService, $stateParams, $state) {
+  StoreService.getProducts().success(function(results) {
+    $scope.results = results;
+    $scope.getItemId = function(item) {
+      $scope.id = item.id;
+    };
+  });
+});
+
+app.controller('SignupController', function($scope, StoreService, $stateParams, $cookies, $state) {
+  $scope.signupSubmit = function() {
+    if ($scope.password != $scope.confirmPassword) {
+      $scope.passwordsdontmatch = true;
+    }
+    else {
+      $scope.passwordsdontmatch = false;
+      var formData = {
+        username: $scope.username,
+        email: $scope.email,
+        password: $scope.password,
+        first_name: $scope.firstName,
+        last_name: $scope.lastName
+      };
+      StoreService.signup(formData).success(function() {
+        $state.go('login');
+      });
+    }
   };
 });

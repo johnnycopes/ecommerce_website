@@ -1,0 +1,41 @@
+nav {
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+ul {
+  list-style: none;
+}
+
+
+
+/* Product details */
+
+.product-details button {
+  display: block;
+}
+
+
+/* Product list */
+
+.product-list img {
+  max-height: 400px;
+}
+
+
+/* View cart */
+
+.view-cart a {
+  display: block;
+}
+
+.cart img {
+  max-height: 200px;
+}
+
+.cart li {
+  text-align: center;
+}

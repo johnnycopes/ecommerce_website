@@ -1,0 +1,13 @@
+<div class="view-cart container">
+    <h3>hello, these are the items in your cart</h3>
+    <h4>Total price: {{total}}</h4>
+    <a ui-sref="home">Continue shopping</a>
+    <a ui-sref="checkout">Check out</a>
+    <ul class="cart">
+        <li ui-sref="product_details({product_id: item.product_id})" ng-repeat="item in cart">
+            <h3>{{item.name}}</h3>
+            <h5>Price: {{item.price}}</h5>
+            <img ng-src="/img/products/{{item.image_path}}">
+        </li>
+    </ul>
+</div>
