@@ -3,6 +3,12 @@ var app = angular.module('store', ['ui.router', 'ngCookies']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
+  .state({
+      name: 'checkout',
+      url: '/checkout',
+      templateUrl: 'templates/checkout.html',
+      controller: 'CheckoutController'
+    })
     .state({
       name: 'home',
       url: '/',
@@ -26,6 +32,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
       url: '/signup',
       templateUrl: 'templates/signup.html',
       controller: 'SignupController'
+    })
+    .state({
+      name: 'thanks',
+      url: '/thanks',
+      templateUrl: 'templates/thanks.html'
     })
     .state({
       name: 'view_cart',
@@ -63,6 +74,14 @@ app.factory('StoreService', function($http, $cookies, $rootScope) {
       method: 'POST',
       url: url,
       data: addToCartData
+    });
+  };
+  service.checkout = function(formData) {
+    var url = '/api/shopping_cart/checkout';
+    return $http({
+      method: 'POST',
+      url: url,
+      data: formData
     });
   };
   service.getDetails = function(id) {
@@ -118,6 +137,27 @@ app.controller("CartController", function($scope, StoreService, $stateParams, $s
     $scope.cart = resultsArr.product_query;
     $scope.total = resultsArr.total_price;
   });
+});
+
+app.controller("CheckoutController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {
+  $scope.checkoutSubmit = function() {
+    var formData = {
+      street_address: $scope.streetAddress,
+      city: $scope.city,
+      state: $scope.state,
+      post_code: $scope.postCode,
+      country: $scope.country,
+      token: $rootScope.token
+    };
+    $scope.formSubmitted = true;
+    return formData;
+  };
+  $scope.confirmCheckout = function() {
+    StoreService.checkout($scope.checkoutSubmit()).success(function() {
+      $scope.formSubmitted = false;
+      $state.go('thanks');
+    });
+  };
 });
 
 app.controller("DetailsController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {

@@ -88,31 +88,6 @@ def add_product_to_cart():
         return jsonify(customer)
 
 
-@app.route('/api/shopping_cart', methods=["POST"])
-def add_to_cart():
-    post_token = request.get_json().get('auth_token')
-    product = request.get_json()
-    customer_id = db.query('''
-    SELECT
-        customer.id
-    FROM
-        customer, auth_token
-    WHERE
-        customer.id = auth_token.customer_id AND
-        now() < token_expires AND
-        auth_token.token = $1
-    ''', post_token).namedresult()
-    if customer_id == []:
-        return 'Forbidden', 403
-    else:
-        db.insert (
-            "product_in_shopping_cart",
-            product_id = product["product_id"],
-            customer_id = customer_id[0].id
-        )
-        return 'post request'
-
-
 @app.route('/api/shopping_cart', methods=["GET"])
 def view_cart():
     get_token = request.args.get('token')
@@ -155,16 +130,27 @@ def view_cart():
         })
 
 
-@app.route('/api/shopping_cart/checkout', methods=['POST'])
+@app.route('/api/shopping_cart/checkout', methods=["POST"])
 def checkout():
-    data = request.get_json()
-    sent_token = data.get('token')
-    customer = db.query('SELECT * FROM auth_token WHERE token = $1 AND now() < token_expires', sent_token).namedresult()
-    if customer == []:
-        return "Forbidden", 403
+    post_token = request.get_json().get('token')
+    print 'this is the post_token', post_token
+    formData = request.get_json()
+    print 'this is formData', formData
+    customer_id = db.query('''
+    SELECT
+        customer.id
+    FROM
+        customer, auth_token
+    WHERE
+        customer.id = auth_token.customer_id AND
+        now() < token_expires AND
+        auth_token.token = $1
+    ''', post_token).namedresult()
+    print customer_id
+    if customer_id == []:
+        return 'Forbidden', 403
     else:
-        customer_id = customer[0].customer_id
-        customer_token = customer[0].token
+        customer_id = customer_id[0].id
         total_price = db.query("""
         SELECT
             sum(price)
@@ -175,7 +161,7 @@ def checkout():
         INNER JOIN
             auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
         WHERE
-            auth_token.token = $1""", customer_token).namedresult()[0].sum
+            auth_token.token = $1""", post_token).namedresult()[0].sum
         purchased_items = db.query("""
         SELECT
             price, product.name, product.id
@@ -186,17 +172,27 @@ def checkout():
         INNER JOIN
             auth_token ON auth_token.customer_id = product_in_shopping_cart.customer_id
         WHERE
-            auth_token.token = $1""", customer_token).dictresult()
+            auth_token.token = $1""", post_token).dictresult()
         purchase = db.insert('purchase', {
             'customer_id': customer_id,
-            'total_price': total_price
+            'total_price': total_price,
+            'city': formData['city'],
+            'street_address': formData['street_address'],
+            'state': formData['state'],
+            'post_code': formData['post_code'],
+            'country': formData['country']
         })
         for item in purchased_items:
             db.insert('product_in_purchase', {
                 'product_id': item['id'],
                 'purchase_id': purchase['id']
             })
-        db.query('DELETE FROM product_in_shopping_cart WHERE customer_id = $1', customer_id)
+        db.query("""
+            DELETE
+                FROM
+                    product_in_shopping_cart
+                WHERE
+                    customer_id = $1""", customer_id)
         return jsonify(purchase)
 
 
