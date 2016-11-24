@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request, redirect
-import bcrypt, uuid, pg, os
+import bcrypt, uuid, pg, os, stripe
 
 
 db = pg.DB(dbname='ecommerce_db')
 app = Flask('ecommerce', static_url_path="")
+
+stripe.api_key = 'pk_test_zs9Kch71dKtIFjsNfa12k10x'
 
 
 @app.route('/')
@@ -51,15 +53,21 @@ def login():
     # part of the encrypted_password, and hash it with the entered password
     rehash = bcrypt.hashpw(password.encode('utf-8'), encrypted_password)
     if rehash == encrypted_password:
-        token = uuid.uuid4()
-        user = db.query('SELECT id, first_name FROM customer WHERE username = $1', username).namedresult()[0]
+        auth_token = uuid.uuid4()
+        user = db.query('''
+        SELECT
+            id, first_name
+        FROM
+            customer
+        WHERE
+            username = $1''', username).namedresult()[0]
         db.insert (
             "auth_token",
-            token = token,
+            token = auth_token,
             customer_id = user.id
         )
         login_data = {
-            'token': token,
+            'auth_token': auth_token,
             'customer_id': user.id,
             'username' : user.first_name
         }
@@ -71,11 +79,17 @@ def login():
 @app.route('/api/shopping_cart', methods=['POST'])
 def add_product_to_cart():
     data = request.get_json()
-    print data
-    sent_token = data.get('token')
-    print sent_token
+    sent_token = data.get('auth_token')
     product_id = data.get('product_id')
-    customer = db.query('SELECT * FROM auth_token WHERE token = $1 AND now() < token_expires', sent_token).namedresult()
+    customer = db.query('''
+    SELECT
+        *
+    FROM
+        auth_token
+    WHERE
+        token = $1 AND
+        now() < token_expires''', sent_token).namedresult()
+
     if customer == []:
         return "Forbidden", 403
     else:
@@ -90,7 +104,7 @@ def add_product_to_cart():
 
 @app.route('/api/shopping_cart', methods=["GET"])
 def view_cart():
-    get_token = request.args.get('token')
+    get_token = request.args.get('auth_token')
     customer_id = db.query('''
     SELECT
         customer.id
@@ -132,10 +146,8 @@ def view_cart():
 
 @app.route('/api/shopping_cart/checkout', methods=["POST"])
 def checkout():
-    post_token = request.get_json().get('token')
-    print 'this is the post_token', post_token
+    post_token = request.get_json().get('auth_token')
     formData = request.get_json()
-    print 'this is formData', formData
     customer_id = db.query('''
     SELECT
         customer.id
@@ -193,7 +205,16 @@ def checkout():
                     product_in_shopping_cart
                 WHERE
                     customer_id = $1""", customer_id)
-        return jsonify(purchase)
+
+        # code from Stripe
+        amount = total_price * 100
+
+        return stripe.Charge.create(
+            amount=amount,
+            currency='usd',
+            source=formData['stripe_token'],
+            description='Flask Charge'
+        )
 
 
 if __name__ == '__main__':
