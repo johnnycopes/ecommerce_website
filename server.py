@@ -5,7 +5,7 @@ import bcrypt, uuid, pg, os, stripe
 db = pg.DB(dbname='ecommerce_db')
 app = Flask('ecommerce', static_url_path="")
 
-stripe.api_key = 'pk_test_zs9Kch71dKtIFjsNfa12k10x'
+stripe.api_key = 'sk_test_xLZzIq7JJQxPN3CWaEsOsgDi'
 
 
 @app.route('/')
@@ -209,12 +209,14 @@ def checkout():
         # code from Stripe
         amount = total_price * 100
 
-        return stripe.Charge.create(
+        stripe.Charge.create(
             amount=amount,
             currency='usd',
             source=formData['stripe_token'],
             description='Flask Charge'
         )
+
+        return jsonify(purchase)
 
 
 if __name__ == '__main__':
