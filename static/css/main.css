@@ -18,12 +18,12 @@ nav {
   background: rgba(0,0,0,0.3);
 }
 
-/*form {
-  max-width: 500px;
-}*/
-
 ul {
   list-style: none;
+}
+
+a {
+  cursor: pointer;
 }
 
 /* Navbar */
@@ -57,6 +57,11 @@ nav .right {
   align-items: center;
 }
 
+.photo-barrier {
+  height: 10px;
+  background: #FFF;
+}
+
 
 /* Logo */
 
@@ -66,6 +71,10 @@ nav .right {
   justify-content: center;
   align-items: center;
   z-index: 2;
+}
+
+.splash {
+  position: relative;
 }
 
 .splash::after {
@@ -146,7 +155,7 @@ nav .right {
 /* Product list */
 
 .product-list img {
-  max-height: 400px;
+  width: 100%;
 }
 
 

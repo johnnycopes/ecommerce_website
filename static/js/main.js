@@ -4,12 +4,7 @@ var app = angular.module('store', ['ui.router', 'ngCookies']);
 // This is the state configuration. States are views that a user will see by loading page templates and designating which controllers run those views.
 app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-  .state({
-    name: 'about',
-    url: '/about',
-    templateUrl: 'templates/about.html'
-  })
-  .state({
+    .state({
       name: 'checkout',
       url: '/checkout',
       templateUrl: 'templates/checkout.html',
@@ -18,14 +13,19 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state({
       name: 'home',
       url: '/',
-      templateUrl: 'templates/home.html',
-      controller: 'MainController'
+      templateUrl: 'templates/home.html'
     })
     .state({
       name: 'login',
       url: '/login',
       templateUrl: 'templates/login.html',
       controller: 'LoginController'
+    })
+    .state({
+      name: 'products',
+      url: '/products',
+      templateUrl: 'templates/products.html',
+      controller: 'ProductsController'
     })
     .state({
       name: 'product_details',
@@ -60,7 +60,7 @@ app.factory('StoreService', function($http, $state, $cookies, $rootScope) {
   var service = {};
   // set cookie data to username or guest
   if (!$cookies.getObject('cookie_data')) {
-    $rootScope.displayName = 'Guest';
+    $rootScope.displayName = null;
     $rootScope.loggedIn = false;
   }
   else {
@@ -72,7 +72,7 @@ app.factory('StoreService', function($http, $state, $cookies, $rootScope) {
   // logout
   $rootScope.logout = function() {
     $cookies.remove('cookie_data');
-    $rootScope.displayName = 'Guest';
+    $rootScope.displayName = null;
     $rootScope.auth_token = null;
     $rootScope.loggedIn = false;
     $state.go('home');
@@ -241,7 +241,7 @@ app.controller("LoginController", function($scope, StoreService, $stateParams, $
   };
 });
 
-app.controller("MainController", function($scope, StoreService, $stateParams, $state) {
+app.controller("ProductsController", function($scope, StoreService, $stateParams, $state) {
   StoreService.getProducts()
     .success(function(results) {
       $scope.results = results;
@@ -281,4 +281,14 @@ app.controller('SignupController', function($scope, StoreService, $stateParams, 
         });
     }
   };
+});
+
+app.directive('navOffset', function(){
+  var navbar = document.querySelector('nav');
+      navbarHeight = navbar.offsetHeight;
+  return {
+    link: function(scope, element, attrs) {
+      element.css('margin-top', navbarHeight + 'px');
+    }
+  }
 });

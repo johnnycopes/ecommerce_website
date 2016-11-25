@@ -19,14 +19,14 @@
                 <div class="nav-container">
                     <div class="left">
                         <a ui-sref="home">Home</a>
-                        <a ui-sref="about">About</a>
+                        <a ui-sref="products">Products</a>
                     </div>
                     <div class="right">
-                        <p>Welcome, {{displayName}}.</p>
-                        <a ui-sref="signup">Sign Up</a>
-                        <a ui-sref="login">Log In</a>
-                        <a ui-sref="view_cart">View Cart</a>
-                        <button ng-click="logout()" class="btn btn-warning">Log Out</button>
+                        <p ng-show="loggedIn">Welcome,  {{displayName}}!</p>
+                        <a ui-sref="signup" ng-hide="loggedIn">Sign up</a>
+                        <a ui-sref="login" ng-hide="loggedIn">Log in</a>
+                        <a ui-sref="view_cart" ng-show="loggedIn">View Cart</a>
+                        <a ng-click="logout()" ng-show="loggedIn">Log Out</a>
                     </div>
                 </div>
             </nav>
