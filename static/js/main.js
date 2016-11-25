@@ -5,6 +5,11 @@ var app = angular.module('store', ['ui.router', 'ngCookies']);
 app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
   .state({
+    name: 'about',
+    url: '/about',
+    templateUrl: 'templates/about.html'
+  })
+  .state({
       name: 'checkout',
       url: '/checkout',
       templateUrl: 'templates/checkout.html',

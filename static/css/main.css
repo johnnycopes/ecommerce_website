@@ -60,7 +60,7 @@ nav .right {
 
 /* Logo */
 
-.splash {
+.full-screen {
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -78,14 +78,14 @@ nav .right {
   opacity: 0.3;
 }
 
-.plate {
-  background: url('../img/site/plato.jpg') center no-repeat;
+.leg {
+  background: url('../img/site/fondo_excelente.jpg') center no-repeat;
   background-size: cover;
   background-attachment: fixed;
 }
 
-.tapa_sherry {
-  background: url('../img/site/tapa_jerez.jpg') center no-repeat;
+.plate {
+  background: url('../img/site/plato.jpg') center no-repeat;
   background-size: cover;
   background-attachment: fixed;
 }
@@ -96,13 +96,21 @@ nav .right {
   background-attachment: fixed;
 }
 
+.tapa_sherry {
+  background: url('../img/site/tapa_jerez.jpg') center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+
 .logo {
   z-index: 2;
+  text-align: center;
 }
 
 .logo h1 {
   margin: 0;
-  font-size: 5rem;
+  font-size: 4rem;
   font-family: 'Playfair Display SC', serif;
   letter-spacing: 1rem;
   text-align: center;
@@ -110,14 +118,28 @@ nav .right {
 }
 
 .logo img {
-  display: block;
+  display: inline-block;
+  position: relative;
   color: #FFF;
+  left: -15px;
+  top: 5px;
+  width: 13.5rem;
 }
 
 /* Product details */
 
+.product-details {
+  margin: 0 auto;
+  display: inline-block;
+  max-width: 700px;
+}
+
 .product-details button {
   display: block;
+}
+
+.product-details img {
+  width: 100%;
 }
 
 
@@ -144,10 +166,11 @@ nav .right {
 
 /* Log in */
 
+.about,
 .login,
 .signup {
   margin: 0 auto;
-  max-width: 500px;
+  max-width: 600px;
   color: #FFF;
   z-index: 2;
 }
