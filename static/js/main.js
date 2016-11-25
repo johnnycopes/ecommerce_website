@@ -164,7 +164,7 @@ app.controller("CheckoutController", function($scope, StoreService, $stateParams
   $scope.confirmCheckout = function() {
     $scope.stripeHandler.open({
       name: 'Checkout',
-      description: 'Rice SuperStore Checkout',
+      description: 'Jamón Depot',
       amount: $scope.stripeTotal
     });
   };
@@ -249,10 +249,11 @@ app.controller("MainController", function($scope, StoreService, $stateParams, $s
 app.controller('SignupController', function($scope, StoreService, $stateParams, $cookies, $state) {
   $scope.signupSubmit = function() {
     if ($scope.password != $scope.confirmPassword) {
-      $scope.passwordsdontmatch = true;
+      $scope.formError = true;
+      $scope.errorMessage = 'Passwords don\'t match';
     }
     else {
-      $scope.passwordsdontmatch = false;
+      $scope.formError = false;
       var formData = {
         username: $scope.username,
         email: $scope.email,

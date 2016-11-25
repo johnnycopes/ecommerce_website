@@ -3,25 +3,33 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Jamón Kingdom</title>
+        <title>Jamón Depot</title>
         <script src="js/angular.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.js"></script>
         <script src="js/angular-ui-router.js"></script>
         <script src="https://checkout.stripe.com/checkout.js"></script>
         <script src="js/main.js"></script>
         <link rel="stylesheet" href="css/bootstrap.css">
+        <link href="https://fonts.googleapis.com/css?family=Heebo|Playfair+Display+SC" rel="stylesheet">
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body ng-app="store">
         <div class="container-fluid">
-            <nav>
-                <p>Welcome, {{displayName}}.</p>
-                <a ui-sref="home">Home</a>
-                <a ui-sref="login">Log In</a>
-                <button ng-click="logout()" class="btn btn-warning">Log Out</button>
-                <a ui-sref="view_cart">View Cart</a>
+            <nav class="row clearfix">
+                <div class="nav-container">
+                    <div class="left">
+                        <a ui-sref="home">Home</a>
+                        <a ui-sref="about">About</a>
+                    </div>
+                    <div class="right">
+                        <p>Welcome, {{displayName}}.</p>
+                        <a ui-sref="signup">Sign Up</a>
+                        <a ui-sref="login">Log In</a>
+                        <a ui-sref="view_cart">View Cart</a>
+                        <button ng-click="logout()" class="btn btn-warning">Log Out</button>
+                    </div>
+                </div>
             </nav>
-            <h1>Welcome to Jamón Kingdom!</h1>
             <ui-view></ui-view>
         </div>
     </body>

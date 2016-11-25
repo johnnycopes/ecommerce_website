@@ -1,36 +1,37 @@
-<div class="checkout container">
-    <form ng-hide="formSubmitted" ng-submit="checkoutSubmit()" method="post">
-        <div class="form-group">
-            <label for="street-address">Street Address:</label>
-            <input id="street-address" class="form-control" ng-model="streetAddress" type="text" name="street-address">
+
+    <div class="checkout container">
+        <form ng-hide="formSubmitted" ng-submit="checkoutSubmit()" method="post">
+            <div class="form-group">
+                <label for="street-address">Street Address:</label>
+                <input id="street-address" class="form-control" ng-model="streetAddress" type="text" name="street-address" required>
+            </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input id="city" class="form-control" ng-model="city" type="text" name="city" required>
+            </div>
+            <div class="form-group">
+                <label for="state">State:</label>
+                <input id="state" class="form-control" ng-model="state" type="text" name="state" required>
+            </div>
+            <div class="form-group">
+                <label for="post-code">Postal Code:</label>
+                <input id="post-code" class="form-control" ng-model="postCode" type="text" name="post-code" required>
+            </div>
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <input id="country" class="form-control" ng-model="country" type="text" name="country" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Proceed</button>
+        </form>
+        <div ng-show="formSubmitted">
+            <h3>Confirm details:</h3>
+            <p><strong>address:</strong>{{streetAddress}}</p>
+            <p><strong>city:</strong> {{city}}</p>
+            <p><strong>state:</strong> {{state}}</p>
+            <p><strong>zip:</strong> {{postCode}}</p>
+            <p><strong>country:</strong> {{country}}</p>
+            <p><strong>order total:</strong> {{total}}</p>
+            <button ng-click="confirmCheckout()" class="btn btn-success">Place order</button>
+            <button ng-click="formSubmitted = false;" class="btn btn-default">Change information</button>
         </div>
-        <div class="form-group">
-            <label for="city">City:</label>
-            <input id="city" class="form-control" ng-model="city" type="text" name="city">
-        </div>
-        <div class="form-group">
-            <label for="state">State:</label>
-            <input id="state" class="form-control" ng-model="state" type="text" name="state">
-        </div>
-        <div class="form-group">
-            <label for="post-code">Postal Code:</label>
-            <input id="post-code" class="form-control" ng-model="postCode" type="text" name="post-code">
-        </div>
-        <div class="form-group">
-            <label for="country">Country:</label>
-            <input id="country" class="form-control" ng-model="country" type="text" name="country">
-        </div>
-        <button class="btn btn-primary" type="submit">Proceed</button>
-    </form>
-    <div ng-show="formSubmitted">
-        <h3>Confirm details:</h3>
-        <p><strong>address:</strong>{{streetAddress}}</p>
-        <p><strong>city:</strong> {{city}}</p>
-        <p><strong>state:</strong> {{state}}</p>
-        <p><strong>zip:</strong> {{postCode}}</p>
-        <p><strong>country:</strong> {{country}}</p>
-        <p><strong>order total:</strong> {{total}}</p>
-        <button ng-click="confirmCheckout()" class="btn btn-success">Place order</button>
-        <button ng-click="formSubmitted = false;" class="btn btn-default">Change information</button>
     </div>
-</div>

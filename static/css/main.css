@@ -1,16 +1,118 @@
-nav {
-  text-align: center;
+html {
+  font-size: 100%;
 }
 
-h1 {
-  text-align: center;
+body {
+  font-size: 1rem;
+  font-family: 'Heebo', sans-serif;
+  background: #FFF;
+  /*color: #FFF;*/
+  z-index: 1;
 }
+
+nav {
+  /*background: #FDC208;*/
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+  background: rgba(0,0,0,0.3);
+}
+
+/*form {
+  max-width: 500px;
+}*/
 
 ul {
   list-style: none;
 }
 
+/* Navbar */
 
+.nav-container {
+  margin: 0 auto;
+  max-width: 1400px;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav p,
+nav a {
+  margin: 0 auto;
+  padding: 1rem;
+  display: inline-block;
+  color: #FFF;
+}
+
+nav a:visited,
+nav a:focus,
+nav a:hover,
+nav a:active {
+  color: #FFF;
+}
+
+nav .left,
+nav .right {
+  display: flex;
+  align-items: center;
+}
+
+
+/* Logo */
+
+.splash {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.splash::after {
+  position: absolute;
+  background: #000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+}
+
+.plate {
+  background: url('../img/site/plato.jpg') center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.tapa_sherry {
+  background: url('../img/site/tapa_jerez.jpg') center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.tapa_breadsticks {
+  background: url('../img/site/tapa_palitos.jpg') center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.logo {
+  z-index: 2;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 5rem;
+  font-family: 'Playfair Display SC', serif;
+  letter-spacing: 1rem;
+  text-align: center;
+  color: #FFF;
+}
+
+.logo img {
+  display: block;
+  color: #FFF;
+}
 
 /* Product details */
 
@@ -38,4 +140,32 @@ ul {
 
 .cart li {
   text-align: center;
+}
+
+/* Log in */
+
+.login,
+.signup {
+  margin: 0 auto;
+  max-width: 500px;
+  color: #FFF;
+  z-index: 2;
+}
+
+.login form {
+  margin: 0 auto;
+}
+
+
+
+/*=============================
+MEDIA QUERIES
+=============================*/
+
+@media screen and (min-width: 1200px) {
+
+  html {
+    font-size: 100%;
+  }
+
 }
