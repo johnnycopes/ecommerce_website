@@ -1,9 +1,16 @@
 <div class="full-screen row">
     <div class="product-details container">
-        <h1>{{name}}</h1>
-        <h3>{{description}}</h3>
-        <p>Price: {{price}}</p>
-        <button class="btn btn-default" ng-click="addToCart()">Add to cart</button>
+        <div class="row">
+            <h1>{{description}}</h1>
+        </div>
+        <div class="row split">
+            <h3>{{name}}</h3>
+            <button ng-click="addToCart()" class="btn btn-default">Add to cart</button>
+        </div>
+        <div class="row split">
+            <h4 class="font400">{{brand}}</h4>
+            <h4 class="price">{{price | currency}}</h4>
+        </div>
         <img ng-src="/img/products/{{image}}" />
     </div>
 </div>

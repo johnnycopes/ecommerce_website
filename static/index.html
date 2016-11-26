@@ -10,7 +10,7 @@
         <script src="https://checkout.stripe.com/checkout.js"></script>
         <script src="js/main.js"></script>
         <link rel="stylesheet" href="css/bootstrap.css">
-        <link href="https://fonts.googleapis.com/css?family=Heebo:100,300,400|Playfair+Display+SC" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Heebo:100,300,400,400i|Playfair+Display+SC" rel="stylesheet">
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body ng-app="store">
@@ -22,7 +22,7 @@
                         <a ui-sref="products">Products</a>
                     </div>
                     <div class="right">
-                        <p ng-show="loggedIn">Welcome,  {{displayName}}!</p>
+                        <p ng-show="loggedIn">Welcome, {{displayName}}!</p>
                         <a ui-sref="signup" ng-hide="loggedIn">Sign up</a>
                         <a ui-sref="login" ng-hide="loggedIn">Log in</a>
                         <a ui-sref="view_cart" ng-show="loggedIn">View cart</a>

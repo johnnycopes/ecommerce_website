@@ -15,7 +15,7 @@ def home():
 
 @app.route('/api/products')
 def products():
-    product_list = db.query('SELECT * FROM product').dictresult()
+    product_list = db.query('SELECT * FROM product ORDER BY price').dictresult()
     return jsonify(product_list)
 
 

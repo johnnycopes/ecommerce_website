@@ -208,6 +208,7 @@ app.controller("DetailsController", function($scope, StoreService, $stateParams,
       $scope.description = item.description;
       $scope.image = item.image_path;
       $scope.price = item.price;
+      $scope.brand = item.brand;
     })
     .error(function() {
       console.log('error!');
