@@ -1,17 +1,28 @@
 <div nav-offset class="container">
     <div class="view-cart row">
-        </div>
+        <div class="row">
             <h1>View cart</h1>
-            <h4>Total price: {{total}}</h4>
-            <a ui-sref="view_cart">Continue shopping</a>
-            <a ui-sref="checkout">Checkout</a>
-            <ul class="cart">
-                <li ui-sref="product_details({product_id: item.product_id})" ng-repeat="item in cart">
-                    <h3>{{item.name}}</h3>
-                    <h5>Price: {{item.price}}</h5>
-                    <img ng-src="/img/products/{{item.image_path}}">
-                </li>
-            </ul>
         </div>
+        <div class="row split">
+            <a ui-sref="products" class="btn btn-default">Continue shopping</a>
+            <a ui-sref="checkout" class="split-right btn btn-default">Checkout</a>
+        </div>
+        <div class="row price">
+            <h4>{{total | currency}}</h4>
+        </div>
+        <ul class="cart row">
+            <li ng-repeat="item in cart" class="col-xs-12 product">
+                <a ui-sref="product_details({product_id: item.product_id})">
+                    <h3>{{item.name}}</h3>
+                    <h4>{{item.price | currency}}</h4>
+                    <img ng-src="/img/products/{{item.image_path}}">
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
+
+
+<!-- add a remove item option to the cart -->
+<!-- responsive -->
+<!-- make sure all is good -->

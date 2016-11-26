@@ -11,11 +11,11 @@ body {
   font-family: 'Heebo', sans-serif;
   font-weight: 300;
   background: #FFF;
-  /*color: #FFF;*/
   z-index: 1;
 }
 
 ul {
+  padding: 0;
   list-style: none;
 }
 
@@ -23,6 +23,10 @@ h1 {
   text-align: center;
   margin: 0.67em 0;
   font-family: 'Playfair Display SC', serif;
+}
+
+h3, h4 {
+  font-weight: 300;
 }
 
 a {
@@ -46,10 +50,15 @@ label,
   text-align: left;
 }
 
+/* Pushes links horizontally to opposite sides */
 .split {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+.split-right {
+  margin-left: auto;
 }
 
 /*=============================
@@ -78,6 +87,10 @@ nav a:focus,
 nav a:hover,
 nav a:active {
   color: #FFF;
+}
+
+nav a:focus {
+  text-decoration: none;
 }
 
 nav .left,
@@ -199,13 +212,10 @@ INDIVIDUAL PAGES
   margin: 10px 0;
 }
 
-.product-details button,
-.product-details .price {
-  margin-left: auto;
-}
-
 .product-details img {
-  width: 100%;
+  margin: 0 auto;
+  display: block;
+  max-height: 400px;
 }
 
 .product-details a,
@@ -213,14 +223,9 @@ INDIVIDUAL PAGES
   color: #333;
 }
 
-.product-details h3, h4,
-.product-list h3, h4 {
-  font-weight: 300;
-  transition: all 250ms ease-in-out;
-}
-
 .product-details a:hover,
-.product-list a:hover {
+.product-list a:hover,
+.cart a:hover {
   color: #D8000A;
   text-decoration: none;
 }
@@ -234,6 +239,15 @@ INDIVIDUAL PAGES
 
 .view-cart a {
   display: block;
+  color: #333;
+}
+
+.price {
+  text-align: right;
+}
+
+.cart .product {
+  margin-bottom: 2rem;
 }
 
 .cart img {

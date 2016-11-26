@@ -118,7 +118,8 @@ app.factory('StoreService', function($http, $state, $cookies, $rootScope) {
       $cookies.putObject('cookie_data', login_data);
       $rootScope.displayName = login_data.username;
       $rootScope.auth_token = login_data.auth_token;
-    });;
+      $rootScope.loggedIn = true;
+    });
   };
   service.signup = function(formData) {
     var url = '/api/user/signup';
@@ -265,7 +266,7 @@ app.controller("ProductsController", function($scope, $rootScope, StoreService, 
 app.controller('SignupController', function($scope, $rootScope, StoreService, $stateParams, $cookies, $state) {
   $rootScope.noSplash = false;
   $scope.signupSubmit = function() {
-    if ($scope.password != $scope.confirmPassword) {
+    if ($scope.password !== $scope.confirmPassword) {
       $scope.formError = true;
       $scope.errorMessage = 'Passwords don\'t match';
     }
