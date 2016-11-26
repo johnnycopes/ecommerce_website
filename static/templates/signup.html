@@ -1,4 +1,4 @@
-<div class="full-screen splash tapa_breadsticks row">
+<div class="full-screen splash tapa-breadsticks bg-img row">
     <div class="container signup">
         <h1>SIGN UP</h1>
         <form ng-submit="signupSubmit()" method="post">
@@ -26,7 +26,9 @@
                 <label for="confirm-password">Confirm password:</label>
                 <input id="confirm-password" class="form-control" ng-model="confirmPassword" type="password" name="confirmPassword" required>
             </div>
-            <button type="submit" class="btn btn-success">Submit</button>
+            <div class="btn-div">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
         </form>
         <div ng-show="formError">{{errorMessage}}</div>
     </div>

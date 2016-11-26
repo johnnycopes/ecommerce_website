@@ -1,13 +1,12 @@
-<div class="">
-
-</div>
 <div nav-offset class="product-list container">
     <div class="row">
+        <h1>Products</h1>
         <div class="product-list" ng-repeat="item in results" {{$index + 1}}>
             <div class="clearfix" ng-if="$index % 2 === 0"></div>
             <div class="product col-xs-6">
                 <a ui-sref="product_details({product_id: item.id})">
                     <h3>{{item.name}}</h3>
+                    <h4>{{item.price | currency}}</h4>
                     <img ng-src="/img/products/{{item.image_path}}" />
                 </a>
             </div>

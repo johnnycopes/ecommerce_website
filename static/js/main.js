@@ -13,7 +13,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state({
       name: 'home',
       url: '/',
-      templateUrl: 'templates/home.html'
+      templateUrl: 'templates/home.html',
+      controller: 'HomeController'
     })
     .state({
       name: 'login',
@@ -143,6 +144,7 @@ app.factory('StoreService', function($http, $state, $cookies, $rootScope) {
 
 // The controllers that pass information beween the model and view
 app.controller("CartController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {
+  $rootScope.noSplash = true;
   StoreService.viewCart()
     .success(function(resultsArr) {
       $scope.cart = resultsArr.product_query;
@@ -151,6 +153,7 @@ app.controller("CartController", function($scope, StoreService, $stateParams, $s
 });
 
 app.controller("CheckoutController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {
+  $rootScope.noSplash = false;
    // This packages up all the needed info to send to the backend upon a successful transaction.
   $scope.checkoutSubmit = function(token) {
     var formData = {
@@ -197,6 +200,7 @@ app.controller("CheckoutController", function($scope, StoreService, $stateParams
 });
 
 app.controller("DetailsController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {
+  $rootScope.noSplash = true;
   $scope.id = $stateParams.product_id;
   StoreService.getDetails($scope.id)
     .success(function(item) {
@@ -224,7 +228,12 @@ app.controller("DetailsController", function($scope, StoreService, $stateParams,
   };
 });
 
+app.controller("HomeController", function($rootScope) {
+  $rootScope.noSplash = false;
+});
+
 app.controller("LoginController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {
+  $rootScope.noSplash = false;
   $scope.login = function() {
     var formData = {
       username: $scope.username,
@@ -241,7 +250,8 @@ app.controller("LoginController", function($scope, StoreService, $stateParams, $
   };
 });
 
-app.controller("ProductsController", function($scope, StoreService, $stateParams, $state) {
+app.controller("ProductsController", function($scope, $rootScope, StoreService, $stateParams, $state) {
+  $rootScope.noSplash = true;
   StoreService.getProducts()
     .success(function(results) {
       $scope.results = results;
@@ -251,7 +261,8 @@ app.controller("ProductsController", function($scope, StoreService, $stateParams
     });
 });
 
-app.controller('SignupController', function($scope, StoreService, $stateParams, $cookies, $state) {
+app.controller('SignupController', function($scope, $rootScope, StoreService, $stateParams, $cookies, $state) {
+  $rootScope.noSplash = false;
   $scope.signupSubmit = function() {
     if ($scope.password != $scope.confirmPassword) {
       $scope.formError = true;

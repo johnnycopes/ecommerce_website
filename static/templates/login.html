@@ -1,4 +1,4 @@
-<div class="full-screen splash tapa_sherry row">
+<div class="full-screen splash tapa-sherry bg-img row">
     <div class="container login">
         <h1>LOG IN</h1>
         <form method="post" ng-submit="login()">
@@ -10,7 +10,9 @@
                 <label for="password">Password:</label>
                 <input id="password" class="form-control" ng-model="password" type="password" name="password">
             </div>
-            <button type="submit" class="btn btn-default">Submit</button>
+            <div class="btn-div">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
             <div ng-show="wronglogin">Either your username or password is borked</div>
         </form>
     </div>

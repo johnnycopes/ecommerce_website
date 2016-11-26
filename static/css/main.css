@@ -1,3 +1,7 @@
+/*=============================
+GLOBAL STYLES/CLASSES
+=============================*/
+
 html {
   font-size: 100%;
 }
@@ -5,35 +9,54 @@ html {
 body {
   font-size: 1rem;
   font-family: 'Heebo', sans-serif;
+  font-weight: 300;
   background: #FFF;
   /*color: #FFF;*/
   z-index: 1;
-}
-
-nav {
-  /*background: #FDC208;*/
-  position: fixed;
-  width: 100%;
-  z-index: 5;
-  background: rgba(0,0,0,0.3);
 }
 
 ul {
   list-style: none;
 }
 
+h1 {
+  text-align: center;
+  margin: 0.67em 0;
+  font-family: 'Playfair Display SC', serif;
+}
+
 a {
   cursor: pointer;
 }
 
-/* Navbar */
+label,
+.fields {
+  font-weight: 300;
+}
 
-.nav-container {
-  margin: 0 auto;
-  max-width: 1400px;
-  width: 90%;
-  display: flex;
-  justify-content: space-between;
+.font300 { font-weight: 300; }
+.font400 { font-weight: 400; }
+
+.photo-barrier {
+  height: 8px;
+  background: #FFF;
+}
+
+.btn-div {
+  text-align: left;
+}
+
+/*=============================
+INDEX.HTML TEMPLATE
+=============================*/
+
+/* --- Navbar --- */
+
+nav {
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+  background: rgba(0,0,0,0.3);
 }
 
 nav p,
@@ -57,13 +80,30 @@ nav .right {
   align-items: center;
 }
 
-.photo-barrier {
-  height: 10px;
-  background: #FFF;
+.nav-container {
+  margin: 0 auto;
+  max-width: 1400px;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-bg {
+  background: #FDC208;
 }
 
 
-/* Logo */
+/* --- Page layouts/splash images --- */
+
+.about,
+.login,
+.signup,
+.checkout {
+  margin: 0 auto;
+  max-width: 600px;
+  color: #FFF;
+  z-index: 2;
+}
 
 .full-screen {
   height: 100vh;
@@ -87,30 +127,20 @@ nav .right {
   opacity: 0.3;
 }
 
-.leg {
-  background: url('../img/site/fondo_excelente.jpg') center no-repeat;
+.bg-img {
   background-size: cover;
   background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.plate {
-  background: url('../img/site/plato.jpg') center no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-}
+.leg { background-image: url('../img/site/fondo_excelente.jpg'); }
+.plate { background-image: url('../img/site/plato.jpg'); }
+.tapa-breadsticks { background-image: url('../img/site/tapa_palitos.jpg'); }
+.tapa-sherry { background-image: url('../img/site/tapa_jerez.jpg'); }
+.slate { background-image: url('../img/site/tabla_melon.jpeg'); }
 
-.tapa_breadsticks {
-  background: url('../img/site/tapa_palitos.jpg') center no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-}
-
-.tapa_sherry {
-  background: url('../img/site/tapa_jerez.jpg') center no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-}
-
+/* --- Logo --- */
 
 .logo {
   z-index: 2;
@@ -135,7 +165,25 @@ nav .right {
   width: 13.5rem;
 }
 
-/* Product details */
+
+/*=============================
+INDIVIDUAL PAGES
+=============================*/
+
+/* --- Product list --- */
+
+.product-list img {
+  margin: 0 auto;
+  display: block;
+  max-height: 300px;
+}
+
+.product-list .product {
+  margin-bottom: 2rem;
+}
+
+
+/* --- Product details --- */
 
 .product-details {
   margin: 0 auto;
@@ -151,15 +199,28 @@ nav .right {
   width: 100%;
 }
 
+.product-details a,
+.product-list a {
+  color: #333;
+}
 
-/* Product list */
+.product-details h3, h4,
+.product-list h3, h4 {
+  font-weight: 300;
+}
 
-.product-list img {
-  width: 100%;
+.product-details a:hover,
+.product-list a:hover {
+  color: #D8000A;
+  text-decoration: none;
 }
 
 
-/* View cart */
+/* --- View cart --- */
+
+.view-cart {
+  margin: 0 auto;
+}
 
 .view-cart a {
   display: block;
@@ -173,21 +234,33 @@ nav .right {
   text-align: center;
 }
 
-/* Log in */
 
-.about,
-.login,
-.signup {
-  margin: 0 auto;
-  max-width: 600px;
-  color: #FFF;
-  z-index: 2;
-}
+/* --- Log in --- */
 
 .login form {
   margin: 0 auto;
 }
 
+
+/* --- Checkout --- */
+
+.checkout {
+  text-align: center;
+}
+
+.checkout h3 {
+  margin: 1rem 0;
+}
+
+.checkout label {
+  text-align: left;
+  display: block;
+}
+
+.confirmDetails {
+  text-align: left;
+  display: inline-block;
+}
 
 
 /*=============================
