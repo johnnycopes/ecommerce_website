@@ -69,6 +69,18 @@ label,
   margin-left: auto;
 }
 
+/* Page transition animation */
+
+.ng-enter {
+  opacity: 0;
+  transition: 400ms;
+}
+
+.ng-enter-active {
+  opacity: 1;
+  transition: 400ms;
+}
+
 /*=============================
 INDEX.HTML TEMPLATE
 =============================*/
@@ -130,6 +142,7 @@ nav .name {
 .thanks {
   margin: 0 auto;
   max-width: 600px;
+  width: 90%;
   color: #FFF;
   z-index: 2;
 }
@@ -170,6 +183,7 @@ nav .name {
 .slate { background-image: url('../img/site/tabla_melon.jpeg'); }
 .hogs { background-image: url('../img/site/cerdos_ibericos.jpg') }
 
+
 /* --- Logo --- */
 
 .logo {
@@ -193,6 +207,12 @@ nav .name {
   left: -15px;
   top: 5px;
   width: 13.5rem;
+}
+
+/* --- Forms --- */
+
+.form-group {
+  margin-bottom: 10px;
 }
 
 
@@ -276,13 +296,6 @@ INDIVIDUAL PAGES
 }
 
 
-/* --- Log in --- */
-
-.login form {
-  margin: 0 auto;
-}
-
-
 /* --- Checkout --- */
 
 .checkout {
@@ -319,10 +332,6 @@ MEDIA QUERIES
 
 
 @media screen and (min-width: 768px) {
-
-  html {
-    font-size: 100%;
-  }
 
   h3 {
     font-size: 24px;

@@ -4,14 +4,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Jamón Depot</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Heebo:100,300,400,400i|Playfair+Display+SC" rel="stylesheet">
+        <link rel="stylesheet" href="css/main.css">
         <script src="js/angular.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.js"></script>
         <script src="js/angular-ui-router.js"></script>
         <script src="https://checkout.stripe.com/checkout.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
         <script src="js/main.js"></script>
-        <link rel="stylesheet" href="css/bootstrap.css">
-        <link href="https://fonts.googleapis.com/css?family=Heebo:100,300,400,400i|Playfair+Display+SC" rel="stylesheet">
-        <link rel="stylesheet" href="css/main.css">
     </head>
     <body ng-app="store">
         <div class="container-fluid">
@@ -30,7 +31,7 @@
                     </div>
                 </div>
             </nav>
-            <ui-view></ui-view>
+            <main ui-view></main>
         </div>
     </body>
 </html>

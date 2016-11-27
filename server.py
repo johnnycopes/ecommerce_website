@@ -28,6 +28,7 @@ def products_details(prod_id):
 @app.route('/api/user/signup', methods=['POST'])
 def signup():
     data = request.get_json()
+    print data
     password = data['password'] # the entered password
     salt = bcrypt.gensalt() # generate a salt
     # generate the encrypted password

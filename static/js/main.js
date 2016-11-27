@@ -1,5 +1,5 @@
 
-var app = angular.module('store', ['ui.router', 'ngCookies']);
+var app = angular.module('store', ['ui.router', 'ngCookies', 'ngAnimate']);
 
 // This is the state configuration. States are views that a user will see by loading page templates and designating which controllers run those views.
 app.config(function($stateProvider, $urlRouterProvider) {
