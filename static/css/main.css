@@ -12,6 +12,8 @@ body {
   font-weight: 300;
   background: #FFF;
   z-index: 1;
+  -webkit-animation: fadein 1s;
+  animation: fadein 1s;
 }
 
 ul {
@@ -71,6 +73,15 @@ label,
 
 /* Page transition animation */
 
+/* on page load */
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* on state transition */
+
 .ng-enter {
   opacity: 0;
   transition: 400ms;
@@ -80,6 +91,7 @@ label,
   opacity: 1;
   transition: 400ms;
 }
+
 
 /*=============================
 INDEX.HTML TEMPLATE
