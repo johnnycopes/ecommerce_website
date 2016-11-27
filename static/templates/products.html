@@ -3,7 +3,7 @@
         <h1 class="class">Products</h1>
         <div class="product-list" ng-repeat="item in results" {{$index + 1}}>
             <div class="clearfix" ng-if="$index % 2 === 0"></div>
-            <div class="product col-xs-6">
+            <div class="product col-xs-12 col-sm-6">
                 <a ui-sref="product_details({product_id: item.id})">
                     <h3>{{item.name}}</h3>
                     <h4>{{item.price | currency}}</h4>

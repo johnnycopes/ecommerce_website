@@ -1,6 +1,9 @@
 <div class="full-screen splash tapa-breadsticks bg-img row">
     <div class="container signup">
-        <h1>SIGN UP</h1>
+        <div class="row">
+            <h1>SIGN UP</h1>
+            <h3 class="center">Already have an account? <a ui-sref="login" class="white underline">Log in</a>.</h3>
+        </div>
         <form ng-submit="signupSubmit()" method="post">
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -26,10 +29,10 @@
                 <label for="confirm-password">Confirm password:</label>
                 <input id="confirm-password" class="form-control" ng-model="confirmPassword" type="password" name="confirmPassword" required>
             </div>
+            <div ng-show="formError">{{errorMessage}}</div>
             <div class="btn-div">
                 <button type="submit" class="btn btn-success">Submit</button>
             </div>
         </form>
-        <div ng-show="formError">{{errorMessage}}</div>
     </div>
 </div>

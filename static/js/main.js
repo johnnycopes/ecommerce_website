@@ -121,6 +121,14 @@ app.factory('StoreService', function($http, $state, $cookies, $rootScope) {
       $rootScope.loggedIn = true;
     });
   };
+  service.removeFromCart = function(removeFromCartData) {
+    var url = '/api/remove_product';
+    return $http({
+      method: 'POST',
+      url: url,
+      data: removeFromCartData
+    });
+  };
   service.signup = function(formData) {
     var url = '/api/user/signup';
     return $http({
@@ -139,7 +147,6 @@ app.factory('StoreService', function($http, $state, $cookies, $rootScope) {
       }
     });
   };
-
   return service;
 });
 
@@ -151,6 +158,21 @@ app.controller("CartController", function($scope, StoreService, $stateParams, $s
       $scope.cart = resultsArr.product_query;
       $scope.total = resultsArr.total_price;
     });
+  $scope.removeFromCart = function(itemId) {
+    var removeFromCartData = {
+      item_id: itemId,
+      auth_token: $rootScope.auth_token
+    };
+    StoreService.removeFromCart(removeFromCartData)
+      // if remove method is successful, call the view_cart method to update the cart immediately
+      .success(function(){
+        StoreService.viewCart()
+          .success(function(resultsArr) {
+            $scope.cart = resultsArr.product_query;
+            $scope.total = resultsArr.total_price;
+          });
+      });
+  };
 });
 
 app.controller("CheckoutController", function($scope, StoreService, $stateParams, $state, $cookies, $rootScope) {
@@ -216,8 +238,7 @@ app.controller("DetailsController", function($scope, StoreService, $stateParams,
     });
   $scope.addToCart = function() {
     if (!$rootScope.loggedIn) {
-      $scope.rejected = true;
-      $cookies.putObject('location', {product_id: $scope.id});
+      $state.go('signup');
     }
     else {
       var addToCartData = {
@@ -281,16 +302,10 @@ app.controller('SignupController', function($scope, $rootScope, StoreService, $s
       };
       StoreService.signup(formData)
         .success(function() {
-          if ($cookies.getObject('location')) {
-            var cookie = $cookies.getObject('location');
-            $state.go('product_details', {product_id: Number(cookie.product_id)});
-          }
-          else {
-            $state.go('login');
-          }
+          $state.go('login');
         })
         .error(function() {
-          console.log('could not sign up');
+          $scope.errorMessage = 'Could not sign up';
         });
     }
   };

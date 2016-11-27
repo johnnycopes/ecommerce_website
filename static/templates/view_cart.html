@@ -5,7 +5,8 @@
         </div>
         <div class="row split">
             <a ui-sref="products" class="btn btn-default">Continue shopping</a>
-            <a ui-sref="checkout" class="split-right btn btn-default">Checkout</a>
+            <a ui-sref="checkout" ng-show="total" class="split-right btn btn-default">Checkout</a>
+            <h4 class="split-right" ng-hide="total">Your cart is empty</h4>
         </div>
         <div class="row price">
             <h4>{{total | currency}}</h4>
@@ -17,12 +18,13 @@
                     <h4>{{item.price | currency}}</h4>
                     <img ng-src="/img/products/{{item.image_path}}">
                 </a>
+                <div class="btn-div">
+                    <btn ng-click="removeFromCart(item.item_id)" class="btn btn-default ib">Remove from cart</btn>
+                </div>
             </li>
         </ul>
     </div>
 </div>
 
-
-<!-- add a remove item option to the cart -->
-<!-- responsive -->
-<!-- make sure all is good -->
+<!-- transitions -->
+<!-- make directive for form elements -->

@@ -3,7 +3,7 @@ GLOBAL STYLES/CLASSES
 =============================*/
 
 html {
-  font-size: 100%;
+  font-size: 85%;
 }
 
 body {
@@ -25,6 +25,10 @@ h1 {
   font-family: 'Playfair Display SC', serif;
 }
 
+h3 {
+  font-size: 20px;
+}
+
 h3, h4 {
   font-weight: 300;
 }
@@ -40,6 +44,10 @@ label,
 
 .font300 { font-weight: 300; }
 .font400 { font-weight: 400; }
+.center { text-align: center; }
+.underline { text-decoration: underline; }
+.white { color: #FFF; }
+.white:hover { color: #FDC208; }
 
 .photo-barrier {
   height: 8px;
@@ -95,20 +103,21 @@ nav a:focus {
 
 nav .left,
 nav .right {
-  display: flex;
-  align-items: center;
+  display: inline-block;
 }
 
 .nav-container {
   margin: 0 auto;
-  max-width: 1400px;
-  width: 90%;
-  display: flex;
-  justify-content: space-between;
+  width: 100%;
+  text-align: center;
 }
 
 .nav-bg {
   background: #FDC208;
+}
+
+nav .name {
+  display: none;
 }
 
 
@@ -117,7 +126,8 @@ nav .right {
 .about,
 .login,
 .signup,
-.checkout {
+.checkout,
+.thanks {
   margin: 0 auto;
   max-width: 600px;
   color: #FFF;
@@ -158,6 +168,7 @@ nav .right {
 .tapa-breadsticks { background-image: url('../img/site/tapa_palitos.jpg'); }
 .tapa-sherry { background-image: url('../img/site/tapa_jerez.jpg'); }
 .slate { background-image: url('../img/site/tabla_melon.jpeg'); }
+.hogs { background-image: url('../img/site/cerdos_ibericos.jpg') }
 
 /* --- Logo --- */
 
@@ -194,7 +205,7 @@ INDIVIDUAL PAGES
 .product-list img {
   margin: 0 auto;
   display: block;
-  max-height: 300px;
+  max-height: 160px;
 }
 
 .product-list .product {
@@ -205,6 +216,7 @@ INDIVIDUAL PAGES
   margin: 0 auto;
   display: inline-block;
   max-width: 700px;
+  width: 90%;
 }
 
 .product-details h3 {
@@ -215,7 +227,7 @@ INDIVIDUAL PAGES
 .product-details img {
   margin: 0 auto;
   display: block;
-  max-height: 400px;
+  max-height: 160px;
 }
 
 .product-details a,
@@ -250,8 +262,13 @@ INDIVIDUAL PAGES
   margin-bottom: 2rem;
 }
 
+.cart .btn-div {
+  margin-top: 10px;
+  text-align: center;
+}
+
 .cart img {
-  max-height: 200px;
+  max-height: 160px;
 }
 
 .cart li {
@@ -291,10 +308,61 @@ INDIVIDUAL PAGES
 MEDIA QUERIES
 =============================*/
 
+@media screen and (max-height: 600px) {
+
+  .signup {
+    height: 350px;
+    overflow-y: auto;
+  }
+
+}
+
+
+@media screen and (min-width: 768px) {
+
+  html {
+    font-size: 100%;
+  }
+
+  h3 {
+    font-size: 24px;
+  }
+
+  .nav-container {
+    max-width: 1400px;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  nav .name {
+    display: inline-block;
+  }
+
+  nav .left,
+  nav .right {
+    display: flex;
+    align-items: center;
+  }
+
+  .product-details img,
+  .product-list img,
+  .cart img {
+    max-height: 200px;
+  }
+
+}
+
+
 @media screen and (min-width: 1200px) {
 
   html {
     font-size: 100%;
+  }
+
+  .product-details img,
+  .product-list img {
+    max-height: 300px;
   }
 
 }

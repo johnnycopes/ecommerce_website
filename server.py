@@ -76,32 +76,6 @@ def login():
         return "Incorrect password", 401
 
 
-@app.route('/api/shopping_cart', methods=['POST'])
-def add_product_to_cart():
-    data = request.get_json()
-    sent_token = data.get('auth_token')
-    product_id = data.get('product_id')
-    customer = db.query('''
-    SELECT
-        *
-    FROM
-        auth_token
-    WHERE
-        token = $1 AND
-        now() < token_expires''', sent_token).namedresult()
-
-    if customer == []:
-        return "Forbidden", 403
-    else:
-        customer_id = customer[0].customer_id
-        customer_token = customer[0].token
-        db.insert('product_in_shopping_cart', {
-            'product_id' : product_id,
-            'customer_id' : customer_id
-        })
-        return jsonify(customer)
-
-
 @app.route('/api/shopping_cart', methods=["GET"])
 def view_cart():
     get_token = request.args.get('auth_token')
@@ -120,12 +94,14 @@ def view_cart():
     else:
         product_query = db.query('''
         SELECT
-            product.name, product.image_path, product.price, product.id AS "product_id"
+            product.name, product.image_path, product.price, product_in_shopping_cart.id AS "item_id", product.id AS "product_id"
         FROM
             product, product_in_shopping_cart, customer
         WHERE
             product.id = product_in_shopping_cart.product_id AND product_in_shopping_cart.customer_id = customer.id AND
-            customer.id = $1;
+            customer.id = $1
+        ORDER BY
+            product.price
         ''', customer_id[0].id).dictresult()
         total_price = db.query("""
             SELECT
@@ -142,6 +118,59 @@ def view_cart():
             'product_query': product_query,
             'total_price': total_price
         })
+
+
+@app.route('/api/shopping_cart', methods=['POST'])
+def add_product_to_cart():
+    data = request.get_json()
+    sent_token = data.get('auth_token')
+    product_id = data.get('product_id')
+    customer = db.query('''
+    SELECT
+        *
+    FROM
+        auth_token
+    WHERE
+        token = $1 AND
+        now() < token_expires''', sent_token).namedresult()
+    if customer == []:
+        return "Forbidden", 403
+    else:
+        customer_id = customer[0].customer_id
+        customer_token = customer[0].token
+        db.insert('product_in_shopping_cart', {
+            'product_id' : product_id,
+            'customer_id' : customer_id
+        })
+        return jsonify(customer)
+
+
+@app.route('/api/remove_product', methods=['POST'])
+def remove_product_from_cart():
+    data = request.get_json()
+    sent_token = data.get('auth_token')
+    item_id = data.get('item_id')
+    customer = db.query('''
+    SELECT
+        *
+    FROM
+        auth_token
+    WHERE
+        token = $1 AND
+        now() < token_expires''', sent_token).namedresult()
+    if customer == []:
+        return "Forbidden", 403
+    else:
+        customer_id = customer[0].customer_id
+        return db.query('''
+            DELETE
+            FROM
+                product_in_shopping_cart
+            WHERE
+                id = $1
+            AND
+                customer_id = $2
+            ''', item_id, customer_id)
 
 
 @app.route('/api/shopping_cart/checkout', methods=["POST"])

@@ -22,7 +22,7 @@
                         <a ui-sref="products">Products</a>
                     </div>
                     <div class="right">
-                        <p ng-show="loggedIn">Welcome, {{displayName}}!</p>
+                        <p class="name" ng-show="loggedIn">Welcome, {{displayName}}!</p>
                         <a ui-sref="signup" ng-hide="loggedIn">Sign up</a>
                         <a ui-sref="login" ng-hide="loggedIn">Log in</a>
                         <a ui-sref="view_cart" ng-show="loggedIn">View cart</a>
