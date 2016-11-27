@@ -1,9 +1,24 @@
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+
 from flask import Flask, jsonify, request, redirect
 import bcrypt, uuid, pg, os, stripe
 
 
-db = pg.DB(dbname='ecommerce_db')
-app = Flask('ecommerce', static_url_path="")
+
+db = pg.DB(
+    dbname=os.environ.get('PG_DBNAME'),
+    host=os.environ.get('PG_HOST'),
+    user=os.environ.get('PG_USERNAME'),
+    passwd=os.environ.get('PG_PASSWORD')
+)
+
+# original app assignment
+# app = Flask('ecommerce', static_url_path="")
+
+# new app assignment
+tmp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+app = Flask('ecommerce', template_folder=tmp_dir, static_url_path="")
 
 stripe.api_key = 'sk_test_xLZzIq7JJQxPN3CWaEsOsgDi'
 
