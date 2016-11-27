@@ -14,9 +14,9 @@
                 <input id="password" class="form-control" ng-model="password" type="password" name="password">
             </div>
             <div class="btn-div">
-                <button type="submit" class="btn btn-default">Submit</button>
+                <div ng-show="wronglogin">Incorrect username and/or password</div>
+                <button type="submit" class="btn btn-success">Submit</button>
             </div>
-            <div ng-show="wronglogin">Either your username or password is borked</div>
         </form>
     </div>
 </div>
