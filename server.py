@@ -20,7 +20,8 @@ db = pg.DB(
 tmp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask('ecommerce', template_folder=tmp_dir, static_url_path="")
 
-stripe.api_key = 'sk_test_xLZzIq7JJQxPN3CWaEsOsgDi'
+# stripe.api_key = 'sk_test_xLZzIq7JJQxPN3CWaEsOsgDi'
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 
 @app.route('/')

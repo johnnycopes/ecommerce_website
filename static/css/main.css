@@ -328,6 +328,10 @@ INDIVIDUAL PAGES
   display: inline-block;
 }
 
+.thanks h3 {
+  text-align: center;
+}
+
 
 /*=============================
 MEDIA QUERIES
