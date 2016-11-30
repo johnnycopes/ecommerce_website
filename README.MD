@@ -1,13 +1,13 @@
 # Jamón Depot
-<img src="img/screenshots/jamon_depot.png" alt="Jamón Depot logo" width="250px"/>
+<img src="static/img/screenshots/jamon_depot.png" alt="Jamón Depot logo" width="250px"/>
 ######
-[Live Project](https://www.jamondepot.club/)   |   [Overview](https://github.com/johnnycopes/ecommerce_website/#overview)   |   [What I Used](https://github.com/johnnycopes/ecommerce_website#what-i-used)   |   [MVP](https://github.com/johnnycopes/ecommerce_website#mvp-minimum-viable-product)   |   [Challenges](https://github.com/johnnycopes/ecommerce_website#challenges--solutions)   |   [Code](https://github.com/johnnycopes/ecommerce_website#code-snippets)   | [Screenshots](https://github.com/johnnycopes/ecommerce_website#screenshots)   |
+[Live Project](http://jamondepot.club/#/)   |   [Overview](https://github.com/johnnycopes/ecommerce_website/#overview)   |   [What I Used](https://github.com/johnnycopes/ecommerce_website#what-i-used)   |   [MVP](https://github.com/johnnycopes/ecommerce_website#mvp-minimum-viable-product)   |   [Challenges](https://github.com/johnnycopes/ecommerce_website#challenges--solutions)   |   [Code](https://github.com/johnnycopes/ecommerce_website#code-snippets)   | [Screenshots](https://github.com/johnnycopes/ecommerce_website#screenshots)   |
 
 ## Overview:
 
 
 ## What I used:
-**Languages:**
+**Languages/Frameworks:**
 * HTML5
 * CSS
 * AngularJS
