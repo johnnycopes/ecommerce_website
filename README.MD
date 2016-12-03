@@ -227,12 +227,12 @@ def checkout():
 ```
 
 ## Screenshots
-![Homepage](img/screenshots/homepage.png)
-![Sign up](img/screenshots/signup.png)
-![View Cart](img/screenshots/viewcart.png)
-![Checkout](img/screenshots/checkout.png)
-![Checkout w/Stripe](img/screenshots/stripe_checkout.png)
-![Tablet](img/screenshots/tablet.png)
-![Phone](img/screenshots/mobile.png)
+![Homepage](static/img/screenshots/homepage.png)
+![Sign up](static/img/screenshots/signup.png)
+![View Cart](static/img/screenshots/viewcart.png)
+![Checkout](static/img/screenshots/checkout.png)
+![Checkout w/Stripe](static/img/screenshots/stripe_checkout.png)
+![Tablet](static/img/screenshots/tablet.png)
+![Phone](static/img/screenshots/mobile.png)
 
 ********
