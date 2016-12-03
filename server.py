@@ -4,8 +4,6 @@ load_dotenv(find_dotenv())
 from flask import Flask, jsonify, request, redirect
 import bcrypt, uuid, pg, os, stripe
 
-
-
 db = pg.DB(
     dbname=os.environ.get('PG_DBNAME'),
     host=os.environ.get('PG_HOST'),
@@ -13,10 +11,10 @@ db = pg.DB(
     passwd=os.environ.get('PG_PASSWORD')
 )
 
-# original app assignment
+# original app assignment:
 # app = Flask('ecommerce', static_url_path="")
 
-# new app assignment
+# new app assignment:
 tmp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 app = Flask('ecommerce', static_url_path='', template_folder=tmp_dir,
@@ -29,35 +27,6 @@ stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 @app.route('/')
 def home():
     return app.send_static_file('index.html')
-
-
-@app.route('/api/products')
-def products():
-    product_list = db.query('SELECT * FROM product ORDER BY price').dictresult()
-    return jsonify(product_list)
-
-
-@app.route('/api/product/<prod_id>')
-def products_details(prod_id):
-    product_details = db.query('SELECT * FROM product WHERE product.id = $1', prod_id).dictresult()[0]
-    return jsonify(product_details)
-
-
-@app.route('/api/user/signup', methods=['POST'])
-def signup():
-    data = request.get_json()
-    print data
-    password = data['password'] # the entered password
-    salt = bcrypt.gensalt() # generate a salt
-    # generate the encrypted password
-    encrypted_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return jsonify(db.insert('customer', {
-        'username': data['username'],
-        'email': data['email'],
-        'first_name': data['first_name'],
-        'last_name': data['last_name'],
-        'password': encrypted_password
-    }))
 
 
 @app.route('/api/user/login', methods=['POST'])
@@ -93,6 +62,46 @@ def login():
         return jsonify(login_data)
     else:
         return "Incorrect password", 401
+
+
+@app.route('/api/product/<prod_id>')
+def products_details(prod_id):
+    product_details = db.query('SELECT * FROM product WHERE product.id = $1', prod_id).dictresult()[0]
+    return jsonify(product_details)
+
+
+@app.route('/api/products')
+def products():
+    product_list = db.query('SELECT * FROM product ORDER BY price').dictresult()
+    return jsonify(product_list)
+
+
+@app.route('/api/remove_product', methods=['POST'])
+def remove_product_from_cart():
+    data = request.get_json()
+    sent_token = data.get('auth_token')
+    item_id = data.get('item_id')
+    customer = db.query('''
+    SELECT
+        *
+    FROM
+        auth_token
+    WHERE
+        token = $1 AND
+        now() < token_expires''', sent_token).namedresult()
+    if customer == []:
+        return "Forbidden", 403
+    else:
+        customer_id = customer[0].customer_id
+        return db.query('''
+            DELETE
+            FROM
+                product_in_shopping_cart
+            WHERE
+                id = $1
+            AND
+                customer_id = $2
+            ''', item_id, customer_id)
 
 
 @app.route('/api/shopping_cart', methods=["GET"])
@@ -162,34 +171,6 @@ def add_product_to_cart():
             'customer_id' : customer_id
         })
         return jsonify(customer)
-
-
-@app.route('/api/remove_product', methods=['POST'])
-def remove_product_from_cart():
-    data = request.get_json()
-    sent_token = data.get('auth_token')
-    item_id = data.get('item_id')
-    customer = db.query('''
-    SELECT
-        *
-    FROM
-        auth_token
-    WHERE
-        token = $1 AND
-        now() < token_expires''', sent_token).namedresult()
-    if customer == []:
-        return "Forbidden", 403
-    else:
-        customer_id = customer[0].customer_id
-        return db.query('''
-            DELETE
-            FROM
-                product_in_shopping_cart
-            WHERE
-                id = $1
-            AND
-                customer_id = $2
-            ''', item_id, customer_id)
 
 
 @app.route('/api/shopping_cart/checkout', methods=["POST"])
@@ -267,5 +248,23 @@ def checkout():
         return jsonify(purchase)
 
 
+@app.route('/api/user/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    print data
+    password = data['password'] # the entered password
+    salt = bcrypt.gensalt() # generate a salt
+    # generate the encrypted password
+    encrypted_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return jsonify(db.insert('customer', {
+        'username': data['username'],
+        'email': data['email'],
+        'first_name': data['first_name'],
+        'last_name': data['last_name'],
+        'password': encrypted_password
+    }))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+    
